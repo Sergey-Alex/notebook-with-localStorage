@@ -33,59 +33,53 @@
     let textarea = document.getElementById('textarea');
     let list = document.getElementById('list');
     let notes = {};
+    let edit = false;
+    let key;
     textarea.addEventListener('blur',function () {
 
-        let date = new Date();
+        if (edit){
+            let obj = localStorage.getItem('obj');
+            let note = JSON.parse(obj);
+             note[key] = this.value;
 
-        let year = date.getFullYear();
+        } else {
+            let date = new Date();
+            let year = date.getFullYear();
+            let month = date.getMonth();
+            let day = date.getDate();
+            let seconds = date.getSeconds();
+            let min = date.getMinutes();
+            let hour = date.getHours();
+            function addZero(num) {
+                if(num >= 0 && num <= 9){
+                    return '0' + num;
+                } else {
+                    return  num
+                }
+            }
 
-        let month = date.getMonth();
+            let  time =  addZero(hour) + ':' + addZero(min) + ':' + addZero(seconds)+ ' - ' + addZero(day) + '/' + addZero(month + 1) + '/' + addZero(year);
 
-        let day = date.getDate();
+            notes[time] = this.value;
+            this.value = '';
+            let li  = document.createElement('li');
+            li.innerHTML = time;
+            list.appendChild(li);
+            let json = JSON.stringify(notes);
+            localStorage.setItem('obj', json);
+            let self = this;
 
-        let seconds = date.getSeconds();
 
-        let min = date.getMinutes();
-
-        let hour = date.getHours();
-
-        function addZero(num) {
-
-           if(num >= 0 && num <= 9){
-
-               return '0' + num;
-
-           } else {
-
-               return  num
-           }
+            li.addEventListener('click', function () {
+                edit = true;
+                let json = localStorage.getItem('obj');
+                let note = JSON.parse(json);
+                self.value =  note[this.innerHTML];
+                key = this.innerHTML;
+            })
         }
 
-      let  time =  addZero(hour) + ':' + addZero(min) + ':' + addZero(seconds)+ ' - ' + addZero(day) + '/' + addZero(month + 1) + '/' + addZero(year);
 
-        notes[time] = this.value;
-
-        this.value = '';
-
-        let li  = document.createElement('li');
-
-        li.innerHTML = time;
-
-        list.appendChild(li);
-
-       let json = JSON.stringify(notes);
-
-       localStorage.setItem('obj', json);
-       let self = this;
-
-       li.addEventListener('click', function () {
-
-           let json = localStorage.getItem('obj');
-
-          let note = JSON.parse(json);
-
-          self.value =  note[this.innerHTML];
-       })
 
     })
 </script>
