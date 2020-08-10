@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    #list {
+        margin-top: 0px;
+        padding: 0px;
+        float: left;
+
+    }
+    #list li {
+        margin-bottom: 10px;
+        cursor: pointer;
+        border: 1px solid black;
+        background-color: antiquewhite;
+
+    }
+    #textarea {
+        width: 600px;
+        height: 300px;
+        float: right;
+        margin-right: 100px;
+    }
+</style>
+<body>
+<textarea  id="textarea"></textarea>
+<ul id="list"></ul>
+<script>
+
+    let textarea = document.getElementById('textarea');
+    let list = document.getElementById('list');
+    let notes = {};
+    textarea.addEventListener('blur',function () {
+
+        let date = new Date();
+
+        let year = date.getFullYear();
+
+        let month = date.getMonth();
+
+        let day = date.getDate();
+
+        let seconds = date.getSeconds();
+
+        let min = date.getMinutes();
+
+        let hour = date.getHours();
+
+        function addZero(num) {
+
+           if(num >= 0 && num <= 9){
+
+               return '0' + num;
+
+           } else {
+
+               return  num
+           }
+        }
+
+      let  time =  addZero(hour) + ':' + addZero(min) + ':' + addZero(seconds)+ ' - ' + addZero(day) + '/' + addZero(month + 1) + '/' + addZero(year);
+
+        notes[time] = this.value;
+
+        this.value = '';
+
+        let li  = document.createElement('li');
+
+        li.innerHTML = time;
+
+        list.appendChild(li);
+
+       let json = JSON.stringify(notes);
+
+       localStorage.setItem('obj', json);
+       let self = this;
+
+       li.addEventListener('click', function () {
+
+           let json = localStorage.getItem('obj');
+
+          let note = JSON.parse(json);
+
+          self.value =  note[this.innerHTML];
+       })
+
+    })
+</script>
+</body>
+</html>
