@@ -38,9 +38,11 @@
     textarea.addEventListener('blur',function () {
 
         if (edit){
-            let obj = localStorage.getItem('obj');
-            let note = JSON.parse(obj);
-             note[key] = this.value;
+          notes[key]  = this.value;
+          let json = JSON.stringify(notes);
+          localStorage.setItem('obj', json);
+          let not = localStorage.getItem('obj');
+          this.value = JSON.parse(not)[key];
 
         } else {
             let date = new Date();
